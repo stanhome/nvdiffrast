@@ -1,0 +1,5 @@
+.venv/
+.vscode/
+build/
+nvdiffrast.egg-info/
+*/__pycache__/
