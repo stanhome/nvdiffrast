@@ -5,3 +5,4 @@ torch
 ninja
 numpy
 imgaug
+PyOpenGL
