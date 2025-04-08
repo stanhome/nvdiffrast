@@ -23,13 +23,14 @@ else:
     print("Specify either --cuda or --opengl")
     exit(1)
 
-pos = tensor([[[-0.8, -0.8, 0, 1], [0.8, -0.8, 0, 1], [-0.8, 0.8, 0, 1]]], dtype=torch.float32)
+pos = tensor([[[-1, -1, 0, 1], [0.8, -0.8, 0, 1], [-1, 1, 0, 1]]], dtype=torch.float32)
 col = tensor([[[1, 0, 0], [0, 1, 0], [0, 0, 1]]], dtype=torch.float32)
 tri = tensor([[0, 1, 2]], dtype=torch.int32)
 
 rast, _ = dr.rasterize(glctx, pos, tri, resolution=[256, 256])
 out, _ = dr.interpolate(col, rast, tri)
 
+# 0 is batch size
 img = out.cpu().numpy()[0, ::-1, :, :] # Flip vertically.
 img = np.clip(np.rint(img * 255), 0, 255).astype(np.uint8) # Quantize to np.uint8
 
