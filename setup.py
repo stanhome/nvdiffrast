@@ -13,6 +13,27 @@ import os
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+try:
+    # pip >=20
+    from pip._internal.network.session import PipSession
+    from pip._internal.req import parse_requirements
+except ImportError:
+    try:
+        # 10.0.0 <= pip <= 19.3.1
+        from pip._internal.download import PipSession
+        from pip._internal.req import parse_requirements
+    except ImportError:
+        # pip <= 9.0.3
+        from pip.download import PipSession
+        from pip.req import parse_requirements
+
+requirements = parse_requirements(
+    os.path.join(os.path.dirname(__file__), "requirements.txt"), session=PipSession()
+)
+
+install_requires = [str(requirement.requirement) for requirement in requirements]
+
+
 setuptools.setup(
     name="nvdiffrast",
     version=nvdiffrast.__version__,
@@ -42,7 +63,7 @@ setuptools.setup(
         ] + (['lib/*.lib'] if os.name == 'nt' else [])
     },
     include_package_data=True,
-    install_requires=['numpy'],  # note: can't require torch here as it will install torch even for a TensorFlow container
+    install_requires=install_requires,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
