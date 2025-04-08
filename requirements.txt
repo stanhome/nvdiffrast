@@ -1,2 +1,7 @@
+# pip install -r requirements.txt 才会生效。 通过 pip install . 不生效
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch
+# Ninja is required run-time to build PyTorch extensions
+ninja
 numpy
 imgaug
