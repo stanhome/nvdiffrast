@@ -64,6 +64,7 @@ def fit_cube(max_iter          = 5000,
 
     datadir = f'{pathlib.Path(__file__).absolute().parents[1]}/data'
     fn = 'cube_%s.npz' % ('d' if discontinuous else 'c')
+    print(f'data path: {datadir}/{fn}')
     with np.load(f'{datadir}/{fn}') as f:
         pos_idx, vtxp, col_idx, vtxc = f.values()
     print("Mesh has %d triangles and %d vertices." % (pos_idx.shape[0], vtxp.shape[0]))
@@ -83,6 +84,7 @@ def fit_cube(max_iter          = 5000,
         ang = 0.0
         gl_avg = []
 
+        # Random initial position/color.
         vtx_pos_rand = np.random.uniform(-0.5, 0.5, size=vtxp.shape) + vtxp
         vtx_col_rand = np.random.uniform(0.0, 1.0, size=vtxc.shape)
         vtx_pos_opt  = torch.tensor(vtx_pos_rand, dtype=torch.float32, device='cuda', requires_grad=True)
@@ -113,11 +115,19 @@ def fit_cube(max_iter          = 5000,
 
             # Print/save log.
             if log_interval and (it % log_interval == 0):
+                gl_vag_log = gl_avg
                 gl_val = np.mean(np.asarray(gl_avg))
                 gl_avg = []
                 s = ("rep=%d," % rep) if repeats > 1 else ""
                 s += "iter=%d,err=%f" % (it, gl_val)
                 print(s)
+                print(vtxp)
+                print(vtxc)
+                print(vtx_pos_rand)
+                print(vtx_col_rand)
+                print(vtx_pos_opt)
+                print(vtx_col_opt)
+                print(gl_vag_log)
                 if log_file:
                     log_file.write(s + "\n")
 
