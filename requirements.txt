@@ -6,3 +6,4 @@ ninja
 numpy
 imgaug
 PyOpenGL
+glfw
